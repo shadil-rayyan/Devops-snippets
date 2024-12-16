@@ -1,0 +1,43 @@
+# Security Policy
+
+## Reporting a Vulnerability
+
+If you believe you've discovered a security vulnerability in this repository, please follow the steps below to report it:
+
+1. **Do not open an issue**: Please **do not open a public issue** for security vulnerabilities. We want to keep security issues private until a fix is available.
+
+2. **Email us**: Send a detailed description of the vulnerability to [your-email@example.com]. We prefer to be contacted via email as it provides a secure way of sharing sensitive information.
+
+3. **Provide the details**: Include the following information in your report:
+   - A description of the issue.
+   - Steps to reproduce (including any scripts or code to demonstrate the issue).
+   - Any potential fixes or suggestions, if available.
+   - The impact and severity of the issue.
+
+4. **Response time**: We will acknowledge your report within 24-48 hours and work to address it promptly.
+
+## Supported Versions
+
+This project follows a [Security Patch Support Policy](https://opensource.guide/legal/). We provide security updates for the following versions:
+
+- **Version X.Y.Z**: Supported
+- **Version A.B.C**: Supported until YYYY-MM-DD
+
+Please refer to the **releases** section to check the latest supported versions.
+
+## Security Best Practices
+
+To ensure the security of your environment, please follow these recommendations:
+- **Update dependencies**: Regularly run `yarn audit` or `npm audit` to identify and fix vulnerabilities.
+- **Use HTTPS**: Always use HTTPS for cloning and interacting with the repository.
+- **Avoid using credentials in source code**: Never commit sensitive credentials (e.g., API keys, tokens) into the repository.
+- **Run security lint the security advisories for the libraries you are using. We encourage you to use tools like [Dependabot](https://github.com/dependabot) to keep all dependencies up to date.
+
+## License
+
+By submitting a security report, you agree to the terms in the [LICENSE](./LICENSE) file of this repository.
+ers**: Integrate security-focused linters (like `eslint-plugin-security`) into your CI/CD pipeline.
+
+## Third-Party Dependencies
+
+This project uses several third-party dependencies. Please make sure to review
