@@ -1,13 +1,23 @@
 name: Failing Test
-description: Report continuously failing tests or jobs in the CI pipeline
-labels: kind/failing-test
+
+description: Report continuously failing tests or jobs in the CI pipeline.
+
+labels: ["kind/failing-test"]
+
 body:
+  - type: markdown
+    attributes:
+      value: |
+        # Failing Test Report
+
+        Please provide details about failing tests or jobs in the CI pipeline so they can be investigated and resolved promptly.
+
   - type: textarea
     id: jobs
     attributes:
       label: Which jobs are failing?
-      placeholder: |
-        Please use this template for submitting reports about tests or jobs that are continuously failing in the CI pipeline. Provide clear details so the issue can be investigated and resolved promptly.
+      description: |
+        Provide details about the CI jobs that are failing. Include relevant logs or error messages if available.
     validations:
       required: true
 
@@ -15,6 +25,8 @@ body:
     id: tests
     attributes:
       label: Which tests are failing?
+      description: |
+        List the specific tests that are failing. Provide context about the module, function, or feature they belong to.
     validations:
       required: true
 
@@ -22,6 +34,8 @@ body:
     id: since
     attributes:
       label: Since when has it been failing?
+      description: |
+        Provide a rough timeline for when the failures started occurring. This helps identify potential changes that may have introduced the issue.
     validations:
       required: true
 
@@ -29,13 +43,15 @@ body:
     id: testgrid
     attributes:
       label: Link to Test Results
+      description: |
+        If available, provide a link to the CI logs, test reports, or dashboards where the failures can be reviewed.
 
   - type: textarea
     id: reason
     attributes:
       label: Reason for failure (if known)
       description: |
-        If possible, provide the root cause of the failure. This can include logs, error messages, or insights into what caused the test to fail.
+        If you have insights into why the tests are failing, please share them. This can include logs, error messages, or recent code changes.
   
   - type: textarea
     id: additional
@@ -43,7 +59,7 @@ body:
       label: Any additional information?
       description: |
         Include any other relevant details that could help diagnose or resolve the issue, such as changes to the environment or recent updates to the codebase.
-
+  
   - type: textarea
     id: sigs
     attributes:
@@ -51,4 +67,3 @@ body:
       description: |
         If applicable, specify the teams or departments (e.g., DevOps, QA, etc.) who should be aware of or help with resolving this issue.
       value: /team
-

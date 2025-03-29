@@ -1,0 +1,104 @@
+name: End-to-end tests
+
+on: 
+  push:
+    branches:
+      - main
+      - shadil
+
+jobs:
+  cypress-run:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, windows-latest, macos-latest]
+        browser: [chrome, firefox, edge]  # Browsers to test
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install Firefox only on macOS runners
+      - name: Install Firefox on macOS
+        if: runner.os == 'macOS'
+        run: brew install firefox
+
+      # Cache NPM modules to improve build speed
+      - name: Cache NPM modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+
+      # Cache Cypress binary to avoid re-downloading it
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-
+
+      # Install dependencies via NPM
+      - name: Install dependencies
+        run: npm ci
+
+      # Install Cypress
+      - name: Install Cypress
+        run: npm install cypress
+
+      # Run Cypress tests with matrix browser and OS settings
+      - name: Cypress run
+        id: cypress_run
+        uses: cypress-io/github-action@v6
+        with:
+          browser: ${{ matrix.browser }}
+        continue-on-error: true
+
+      # Generate Test Results in JSON format
+      - name: Save Test Results
+        run: |
+          mkdir -p test-results
+          npx cypress run --browser ${{ matrix.browser }} --reporter json --reporter-options output=test-results/results-${{ matrix.os }}-${{ matrix.browser }}.json
+        continue-on-error: true
+
+      # Generate Excel Sheet from Test Results
+      - name: Create Excel Report
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - run: npm install xlsx fs
+      - run: |
+          node <<EOF
+          const xlsx = require('xlsx');
+          const fs = require('fs');
+          const filePath = './test-results/results-${{ matrix.os }}-${{ matrix.browser }}.json';
+          
+          if (fs.existsSync(filePath)) {
+              const results = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+              const data = results.tests.map(test => ({
+                  Name: test.title.join(' > '),
+                  Status: test.state,
+                  Duration: test.duration,
+                  Browser: "${{ matrix.browser }}",
+                  OS: "${{ matrix.os }}"
+              }));
+
+              const workbook = xlsx.utils.book_new();
+              const worksheet = xlsx.utils.json_to_sheet(data);
+              xlsx.utils.book_append_sheet(workbook, worksheet, 'Test Results');
+
+              xlsx.writeFile(workbook, './test-results/summary.xlsx');
+          }
+          EOF
+
+      # Upload Excel sheet as an artifact
+      - name: Upload Excel Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-test-report
+          path: ./test-results/summary.xlsx
