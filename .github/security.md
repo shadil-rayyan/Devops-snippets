@@ -5,7 +5,7 @@
 If you discover a security vulnerability in this project, please follow these steps:
 
 1. **Do not disclose it publicly** – Security vulnerabilities should be reported responsibly.
-2. **Contact the security team** – Submit a report via [security@example.com] or through the project's private security disclosure process.
+2. **Contact the security team** – Submit a report via [codecompass2024@gmail.com] or through the project's private security disclosure process.
 3. **Provide details** – Include:
    - Steps to reproduce the issue
    - Affected versions or components
